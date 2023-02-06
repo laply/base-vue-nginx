@@ -24,8 +24,18 @@ const request = async (method, url, data) => {
     });
 };
 
+export const setAuthInHeader = (token) => {
+  axios.defaults.headers.common["Authorization"] = token ? `Bearer ${token}` : null;
+};
+
 export const board = {
   fetch() {
     return request("get", "/boards");
+  },
+};
+
+export const auth = {
+  login(email, password) {
+    return request("post", "/login", { email, password });
   },
 };
