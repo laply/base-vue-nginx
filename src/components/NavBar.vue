@@ -1,23 +1,46 @@
 <template>
-  <div id="app">
-    <router-link to="/">Home</router-link>
-    <router-link to="login">Login</router-link>
+  <div>
+    <b-navbar toggleable="lg" type="dark" variant="info">
+      <b-navbar-brand href="/">Home</b-navbar-brand>
+      <b-navbar-nav class="ml-auto">
+        <div v-if="isAuth">
+          <b-nav-item-dropdown right>
+            <template #button-content> User </template>
+            <b-dropdown-item @click.prevent="logout">Sign Out</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </div>
+        <div v-else>
+          <b-navbar-nav>
+            <b-nav-item href="/login">Login</b-nav-item>
+          </b-navbar-nav>
+        </div>
+      </b-navbar-nav>
+    </b-navbar>
   </div>
 </template>
 <script>
+import { setAuthInHeader } from "@/api";
 export default {
   name: "NavBar",
-  components: {},
+  watch: {
+    $route: {
+      handler: "isAuth()", // watch $route for changes
+      immediate: true, // call it immediately
+    },
+  },
+  computed: {
+    isAuth() {
+      return !!localStorage.getItem("token");
+    },
+  },
+  methods: {
+    logout() {
+      delete localStorage.token;
+      setAuthInHeader(null);
+      this.$router.replace("/login");
+    },
+  },
 };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
