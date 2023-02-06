@@ -1,7 +1,10 @@
 <template>
   <div>
     Card
-    <div>cid: {{ cid }}</div>
+    <div v-if="loading">page loading</div>
+    <div v-else>
+      <div>cid: {{ cid }}</div>
+    </div>
   </div>
 </template>
 
@@ -9,14 +12,24 @@
 export default {
   name: "CardView",
   data() {
-    return { cid: 0 };
+    return { cid: 0, loading: false };
   },
   created() {
-    this.cid = this.$route.params.cid;
+    this.fetchData();
   },
   watch: {
-    $route() {
-      this.cid = this.$route.params.cid;
+    $route: {
+      handler: "fetchData()", // watch $route for changes
+      immediate: true, // call it immediately
+    },
+  },
+  methods: {
+    fetchData() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        this.cid = this.$route.params.cid;
+      }, 1000);
     },
   },
 };
