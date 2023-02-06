@@ -3,12 +3,10 @@
     Home
 
     <div v-if="loading">Page Loading ~</div>
-    <div v-else-if="err !== undefined">{{ err }}</div>
     <div v-else>
-      api = {{ apiRes }}
-      <!-- <div v-for="board in boards" :key="board.id">
-        <router-link :to="'/b/' + board.id">{{ board.name }}</router-link>
-      </div> -->
+      <div v-for="board in boards" :key="board.id">
+        <router-link :to="'/b/' + board.id">{{ board }}</router-link>
+      </div>
     </div>
     <ul>
       <li>
@@ -22,12 +20,12 @@
 </template>
 
 <script>
-import axios from "axios";
+import { board } from "@/api";
 
 export default {
   name: "HomePage",
   data() {
-    return { loading: false, apiRes: "" };
+    return { loading: false, boards: "" };
   },
   created() {
     this.fetchData();
@@ -42,39 +40,14 @@ export default {
     fetchData() {
       this.loading = true;
 
-      axios
-        .get("http://localhost:3000/Health", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          param: {},
+      board
+        .fetch()
+        .then((boards) => {
+          this.boards = boards;
         })
-        .then((res) => {
+        .finally(() => {
           this.loading = false;
-          this.apiRes = res.data;
-        })
-        .catch((res) => {
-          this.loading = false;
-          this.err = res.response.data;
-        })
-        .finally(function () {});
-    },
-    fetchDataXml() {
-      this.loading = true;
-
-      let req = new XMLHttpRequest();
-
-      req.open("GET", "http://localhost:3000/Health", true);
-      req.send();
-
-      req.addEventListener("load", () => {
-        this.loading = false;
-        this.apiRes = {
-          status: req.status,
-          statusText: req.statusText,
-          response: JSON.parse(req.responseText),
-        };
-      });
+        });
     },
   },
 };
