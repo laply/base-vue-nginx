@@ -22,12 +22,7 @@
 import { setAuthInHeader } from "@/api";
 export default {
   name: "NavBar",
-  watch: {
-    $route: {
-      handler: "isAuth()", // watch $route for changes
-      immediate: true, // call it immediately
-    },
-  },
+
   computed: {
     isAuth() {
       return !!localStorage.getItem("token");
