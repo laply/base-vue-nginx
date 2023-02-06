@@ -1,12 +1,16 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <div id="app">Board</div>
 </template>
-
 <script>
 export default {
-  name: "App",
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: "Board",
+  data() {
+    return { bid: 0 };
+  },
+  created() {
+    this.bid = this.$route.params.bid;
+  },
   components: {},
 };
 </script>
