@@ -5,17 +5,13 @@ import LoginPage from "../components/LoginPage.vue";
 import Board from "../components/Board.vue";
 import CardView from "../components/CardView.vue";
 import NotFound from "../components/NotFound.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
 const requireAuth = (to, from, next) => {
   const loginPath = "/login?rPath=" + encodeURIComponent(to.path);
-
-  if (localStorage.getItem("token")) {
-    next();
-  } else {
-    next(loginPath);
-  }
+  store.getters.isAuth ? next() : next(loginPath);
 };
 
 const router = new VueRouter({

@@ -29,7 +29,7 @@ export const setAuthInHeader = (token) => {
 };
 
 export const board = {
-  add(title) {
+  create(title) {
     return request("POST", "/boards", { title });
   },
   fetch() {

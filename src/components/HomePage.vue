@@ -11,30 +11,27 @@
             </div>
           </router-link>
         </div>
-        <div class="board-item board-new-item" @click.prevent="toggleAddBoard">
+        <div class="board-item board-new-item" @click.prevent="TOGGLE_ADD_BOARD(true)">
           <div class="board-item-title">create new board</div>
         </div>
       </div>
     </div>
-    <AddBoard @submit="addBoard" v-if="isAddBoard" @close="toggleAddBoard" />
+    <AddBoard v-if="isAddBoard" />
   </div>
 </template>
 
 <script>
-import { board } from "@/api";
 import AddBoard from "./AddBoard.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "HomePage",
   components: {
     AddBoard,
   },
-
   data() {
     return {
       loading: false,
-      boards: [],
-      isAddBoard: false,
     };
   },
   created() {
@@ -46,30 +43,22 @@ export default {
       immediate: true,
     },
   },
+  computed: {
+    ...mapState(["isAddBoard", "boards"]),
+  },
   updated() {
     Array.from(document.querySelectorAll(".board-item")).forEach((el) => {
       el.style.backgroundColor = el.dataset.bgcolor || "#ddd";
     });
   },
   methods: {
-    toggleAddBoard() {
-      this.isAddBoard = !this.isAddBoard;
-    },
-    addBoard(title) {
-      board.add(title).then(() => {
-        this.fetchData();
-      });
-    },
+    ...mapMutations(["TOGGLE_ADD_BOARD"]),
+    ...mapActions(["FETCH_BOARDS"]),
     fetchData() {
       this.loading = true;
-      board
-        .fetch()
-        .then((boards) => {
-          this.boards = boards?.list;
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      this.FETCH_BOARDS().finally(() => {
+        this.loading = false;
+      });
     },
   },
 };

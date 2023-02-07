@@ -19,8 +19,8 @@ export default {
   },
   watch: {
     $route: {
-      handler: "fetchData()", // watch $route for changes
-      immediate: true, // call it immediately
+      handler: "fetchData()",
+      immediate: true,
     },
   },
   methods: {
